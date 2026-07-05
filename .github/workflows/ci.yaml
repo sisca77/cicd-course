@@ -8,7 +8,7 @@ on:
 
 jobs:
   test-and-security:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux, X64]
 
     steps:
       - name: Checkout
@@ -18,16 +18,12 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-          cache: "pip"
-          cache-dependency-path: |
-            requirements.txt
-            requirements-dev.txt
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install -r requirements-dev.txt
+          python -m pip install --no-cache-dir --upgrade pip
+          pip install --no-cache-dir -r requirements.txt
+          pip install --no-cache-dir -r requirements-dev.txt
 
       - name: Lint (ruff)
         run: ruff check src tests
@@ -48,5 +44,18 @@ jobs:
           scan-ref: "."
           format: "table"
           severity: "CRITICAL,HIGH"
+          ignore-unfixed: true
+          exit-code: "1"
+
+      - name: Build Docker image
+        run: docker build -t settlement .
+
+      - name: Trivy security scan (docker image)
+        uses: aquasecurity/trivy-action@v0.24.0
+        with:
+          scan-type: "image"
+          image-ref: "settlement"
+          format: "table"
+          severity: "CRITICAL"
           ignore-unfixed: true
           exit-code: "1"
