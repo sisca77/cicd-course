@@ -122,3 +122,6 @@ npm-debug.log*
 
 # github actions runner agent
 actions-runner/
+
+actions-runner/
+*.tar.gz
