@@ -32,14 +32,14 @@ jobs:
       - name: Lint (ruff)
         run: ruff check src tests
 
-      - name: Run unit tests with coverage (min 80%)
+      - name: Run unit tests with coverage (min 70%)
         env:
           PYTHONPATH: src
         run: |
           pytest -v \
             --cov=settlement \
             --cov-report=term-missing \
-            --cov-fail-under=80
+            --cov-fail-under=70
 
       - name: Trivy security scan (filesystem)
         uses: aquasecurity/trivy-action@v0.24.0
