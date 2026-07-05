@@ -121,4 +121,4 @@ npm-debug.log*
 /tmp/kind-config*.yaml
 
 # github actions runner agent
-actions-runner actions-runner/
+actions-runner/
